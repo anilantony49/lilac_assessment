@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lilac_assesment/onboarding_screen.dart';
 import 'package:lilac_assesment/splash_screen.dart';
 
 void main() {
@@ -15,10 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const SplashScreen(),
+      home: const SecondOnboardingScreen(),
     );
   }
 }

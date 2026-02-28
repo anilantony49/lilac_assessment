@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lilac_assesment/button_nav_item.dart';
+import 'package:lilac_assesment/core/network/api_service.dart';
+import 'package:lilac_assesment/data/models/movie_models.dart';
+import 'package:lilac_assesment/presentation/widgets/home_screen_widgets.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final ApiService _apiService = ApiService();
+  late Future<List<MovieModels>> _movies;
+
+  @override
+  void initState() {
+    super.initState();
+    _movies = _apiService.fetchMovie();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -301,14 +317,38 @@ class HomeScreen extends StatelessWidget {
                   right: 0,
                   child: SizedBox(
                     height: 95, // same as 94.9253
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 16),
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: const TrendingMovieCard(),
+                    child: FutureBuilder<List<MovieModels>>(
+                      future: _movies,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          // print(snapshot.error);
+                          return Center(
+                            child: Text(
+                              "Failed to load movies",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        }
+                        final movies = snapshot.data ?? [];
+                        // print(movies);
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.only(left: 16),
+                          itemCount: movies.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: TrendingMovieCard(
+                                poster: movies[index].poster,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

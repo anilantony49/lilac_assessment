@@ -90,10 +90,44 @@ class SectionTitle extends StatelessWidget {
 }
 
 class TrendingMovieCard extends StatelessWidget {
-  const TrendingMovieCard({super.key});
+  final String poster;
+  const TrendingMovieCard({super.key, required this.poster});
 
   @override
   Widget build(BuildContext context) {
+    final bool hasValidPoster = poster.isNotEmpty && poster != "N/A";
+    return Container(
+      width: 169,
+      height: 94.9253,
+      decoration: BoxDecoration(
+        // color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: const Color(0xFF94061C), width: 0.5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0xFF7D0015),
+            offset: Offset(0, 6),
+            blurRadius: 17.2,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(13),
+        child:
+            hasValidPoster
+                ? Image.network(
+                  poster,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _placeholder();
+                  },
+                )
+                : _placeholder(),
+      ),
+    );
+  }
+
+  Widget _placeholder() {
     return Container(
       width: 169,
       height: 94.9253,

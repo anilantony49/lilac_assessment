@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lilac_assesment/home_screen.dart';
-import 'package:lilac_assesment/onboarding_screen.dart';
-import 'package:lilac_assesment/splash_screen.dart';
+import 'package:lilac_assesment/presentation/home/home_screen.dart';
+import 'package:lilac_assesment/presentation/onboarding/onboarding_screen.dart';
+import 'package:lilac_assesment/presentation/splash/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());

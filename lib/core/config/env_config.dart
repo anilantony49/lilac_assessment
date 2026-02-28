@@ -1,3 +1,3 @@
 class EnvConfig {
-  static const apiKey = String.fromEnvironment('a95ec31c', defaultValue: '');
+  static const apiKey = 'a95ec31c';
 }

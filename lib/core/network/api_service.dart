@@ -15,10 +15,10 @@ class ApiService {
     ),
   );
 
-  Future<List<MovieModels>> fetchMovie() async {
+  Future<List<MovieModels>> fetchMovie(int page) async {
     try {
       final response = await _dio.get(
-        "https://omdbapi.com/?apikey=a95ec31c&s=avengers&page=1",
+        "${ApiConstants.baseUrl}/?apikey=${EnvConfig.apiKey}&s=avengers&page=$page",
         // queryParameters: {
         //   "apikey": EnvConfig.apiKey,
         //   "s": "avengers",

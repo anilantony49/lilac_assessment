@@ -13,12 +13,42 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
-  late Future<List<MovieModels>> _movies;
+  final ScrollController _scrollController = ScrollController();
+
+  List<MovieModels> movies = [];
+  // late Future<List<MovieModels>> _movies;
+  int currentPage = 1;
+  bool isLoading = false;
+  bool hasMore = true;
 
   @override
   void initState() {
     super.initState();
-    _movies = _apiService.fetchMovie();
+    fetchMovies();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 100 &&
+          !isLoading &&
+          hasMore) {
+        fetchMovies();
+      }
+    });
+  }
+
+  Future<void> fetchMovies() async {
+    setState(() => isLoading = true);
+
+    final newMovies = await _apiService.fetchMovie(currentPage);
+
+    if (newMovies.isEmpty) {
+      hasMore = false;
+    } else {
+      currentPage++;
+      movies.addAll(newMovies);
+    }
+
+    setState(() => isLoading = false);
   }
 
   @override
@@ -317,39 +347,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   right: 0,
                   child: SizedBox(
                     height: 95, // same as 94.9253
-                    child: FutureBuilder<List<MovieModels>>(
-                      future: _movies,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          // print(snapshot.error);
-                          return Center(
-                            child: Text(
-                              "Failed to load movies",
-                              style: TextStyle(color: Colors.white),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.only(left: 16),
+                      itemCount: movies.length + (isLoading ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index < movies.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: TrendingMovieCard(
+                              poster: movies[index].poster,
                             ),
                           );
+                        } else {
+                          return const SizedBox(
+                            width: 80,
+                            child: Center(child: CircularProgressIndicator()),
+                          );
                         }
-                        final movies = snapshot.data ?? [];
-                        // print(movies);
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.only(left: 16),
-                          itemCount: movies.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: TrendingMovieCard(
-                                poster: movies[index].poster,
-                              ),
-                            );
-                          },
-                        );
                       },
                     ),
                   ),

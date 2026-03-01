@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lilac_assesment/core/network/api_service.dart';
 import 'package:lilac_assesment/data/models/movie_models.dart';
+import 'package:lilac_assesment/presentation/details_screen.dart';
 import 'package:lilac_assesment/presentation/widgets/home_screen_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -356,8 +357,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (index < movies.length) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 12),
-                            child: TrendingMovieCard(
-                              poster: movies[index].poster,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => DetailsScreen(
+                                          imdbID: movies[index].imdbID,
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: TrendingMovieCard(
+                                poster: movies[index].poster,
+                              ),
                             ),
                           );
                         } else {

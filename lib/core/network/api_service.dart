@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:lilac_assesment/core/config/env_config.dart';
 import 'package:lilac_assesment/core/network/api_constants.dart';
+import 'package:lilac_assesment/data/models/movie_details_models.dart';
 import 'package:lilac_assesment/data/models/movie_models.dart';
 
 class ApiService {
@@ -40,23 +41,16 @@ class ApiService {
     }
   }
 
-  Future<List<MovieModels>> fetchMovieDetails() async {
+  Future<MovieDetailsModels> fetchMovieDetails(String imdbID) async {
     try {
       final response = await _dio.get(
-        "${ApiConstants.baseUrl}/?apikey=${EnvConfig.apiKey}&i=tt0848228&plot=full",
-        // queryParameters: {
-        //   "apikey": EnvConfig.apiKey,
-        //   "s": "avengers",
-        //   "page": 1,
-        // },
+        "${ApiConstants.baseUrl}/?apikey=${EnvConfig.apiKey}&i=$imdbID&plot=full",
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> movies = response.data['Search'] ?? [];
-
-        return movies.map((movie) => MovieModels.fromJson(movie)).toList();
+        return MovieDetailsModels.fromJson(response.data);
       } else {
-        throw Exception("Failed to load movies");
+        throw Exception("Failed to load movie details");
       }
     } on DioException catch (e) {
       throw Exception('Failed to load data: ${e.message}');

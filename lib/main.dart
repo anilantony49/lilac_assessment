@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:lilac_assesment/presentation/details_screen.dart';
 import 'package:lilac_assesment/presentation/home/home_screen.dart';
 import 'package:lilac_assesment/presentation/onboarding/onboarding_screen.dart';
 import 'package:lilac_assesment/presentation/splash/splash_screen.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const HomeScreen(),
+      home: const DetailsScreen(),
     );
   }
 }

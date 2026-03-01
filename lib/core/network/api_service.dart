@@ -39,4 +39,29 @@ class ApiService {
       throw Exception('An unexpected error occurred: $e');
     }
   }
+
+  Future<List<MovieModels>> fetchMovieDetails() async {
+    try {
+      final response = await _dio.get(
+        "${ApiConstants.baseUrl}/?apikey=${EnvConfig.apiKey}&i=tt0848228&plot=full",
+        // queryParameters: {
+        //   "apikey": EnvConfig.apiKey,
+        //   "s": "avengers",
+        //   "page": 1,
+        // },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> movies = response.data['Search'] ?? [];
+
+        return movies.map((movie) => MovieModels.fromJson(movie)).toList();
+      } else {
+        throw Exception("Failed to load movies");
+      }
+    } on DioException catch (e) {
+      throw Exception('Failed to load data: ${e.message}');
+    } catch (e) {
+      throw Exception('An unexpected error occurred: $e');
+    }
+  }
 }

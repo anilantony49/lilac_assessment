@@ -54,16 +54,50 @@ class BottomNavItem extends StatelessWidget {
 }
 
 class UpcomingCard extends StatelessWidget {
-  const UpcomingCard({super.key});
+  final String poster;
+  const UpcomingCard({super.key, required this.poster});
 
   @override
   Widget build(BuildContext context) {
+    final bool hasValidPoster = poster.isNotEmpty && poster != "N/A";
     return Container(
       width: 126,
       height: 187,
       decoration: BoxDecoration(
         color: const Color(0xFF414141),
         borderRadius: BorderRadius.circular(12),
+      ),
+      child:
+          hasValidPoster
+              ? ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  poster,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return _placeholder();
+                  },
+                ),
+              )
+              : _placeholder(),
+    );
+  }
+
+  Widget _placeholder() {
+    return Container(
+      width: 169,
+      height: 94.9253,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: const Color(0xFF94061C), width: 0.5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0xFF7D0015),
+            offset: Offset(0, 6),
+            blurRadius: 17.2,
+          ),
+        ],
       ),
     );
   }

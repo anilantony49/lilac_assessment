@@ -377,7 +377,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 /// Movie Poster Card (126x187)
-                ///
                 Positioned(
                   top: 830,
                   left: 0,
@@ -385,14 +384,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     height: 187,
                     child: ListView.builder(
+                      controller: _scrollController,
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.only(left: 16),
-                      itemCount: 10, // number of cards
+                      itemCount: movies.length + (isLoading ? 1 : 0),
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: UpcomingCard(),
-                        );
+                        if (index < movies.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: UpcomingCard(poster: movies[index].poster),
+                          );
+                        } else {
+                          return const SizedBox(
+                            width: 80,
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
                       },
                     ),
                   ),

@@ -60,6 +60,7 @@ class UpcomingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool hasValidPoster = poster.isNotEmpty && poster != "N/A";
+
     return Container(
       width: 126,
       height: 187,
@@ -70,37 +71,78 @@ class UpcomingCard extends StatelessWidget {
       child:
           hasValidPoster
               ? ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  poster,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return _placeholder();
-                  },
+                borderRadius: BorderRadius.circular(12), // ✅ Clip everything
+                child: Stack(
+                  children: [
+                    // Poster
+                    Positioned.fill(
+                      child: Image.network(
+                        poster,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return _placeholder();
+                        },
+                      ),
+                    ),
+
+                    // Gradient
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 102,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.transparent, Colors.black],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Book Now Text
+                    Positioned(
+                      bottom: 12,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Text(
+                          "Book Now",
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               )
               : _placeholder(),
     );
   }
+}
 
-  Widget _placeholder() {
-    return Container(
-      width: 169,
-      height: 94.9253,
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: const Color(0xFF94061C), width: 0.5),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0xFF7D0015),
-            offset: Offset(0, 6),
-            blurRadius: 17.2,
-          ),
-        ],
-      ),
-    );
-  }
+Widget _placeholder() {
+  return Container(
+    width: 169,
+    height: 94.9253,
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFFFFF),
+      borderRadius: BorderRadius.circular(13),
+      border: Border.all(color: const Color(0xFF94061C), width: 0.5),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0xFF7D0015),
+          offset: Offset(0, 6),
+          blurRadius: 17.2,
+        ),
+      ],
+    ),
+  );
 }
 
 class SectionTitle extends StatelessWidget {
@@ -125,39 +167,84 @@ class SectionTitle extends StatelessWidget {
 
 class TrendingMovieCard extends StatelessWidget {
   final String poster;
-  const TrendingMovieCard({super.key, required this.poster});
+  final String title;
+  const TrendingMovieCard({
+    super.key,
+    required this.poster,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
     final bool hasValidPoster = poster.isNotEmpty && poster != "N/A";
+
     return Container(
       width: 169,
-      height: 94.9253,
+      height: 95,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        // color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(13),
         border: Border.all(color: const Color(0xFF94061C), width: 0.5),
         boxShadow: const [
           BoxShadow(
             color: Color(0xFF7D0015),
             offset: Offset(0, 6),
-            blurRadius: 17.2,
+            blurRadius: 6.2,
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(13),
-        child:
-            hasValidPoster
-                ? Image.network(
-                  poster,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return _placeholder();
-                  },
-                )
-                : _placeholder(),
-      ),
+      child:
+          hasValidPoster
+              ? Stack(
+                children: [
+                  // Poster
+                  Positioned.fill(
+                    child: Image.network(
+                      poster,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _placeholder();
+                      },
+                    ),
+                  ),
+
+                  // Gradient Overlay
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Book Now Text
+                  Positioned(
+                    bottom: 8,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        title,
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+              : _placeholder(),
     );
   }
 
@@ -173,7 +260,7 @@ class TrendingMovieCard extends StatelessWidget {
           BoxShadow(
             color: Color(0xFF7D0015),
             offset: Offset(0, 6),
-            blurRadius: 17.2,
+            blurRadius: 6.2,
           ),
         ],
       ),
@@ -183,28 +270,33 @@ class TrendingMovieCard extends StatelessWidget {
 
 class GenrePill extends StatelessWidget {
   final String text;
-  final double width;
 
-  const GenrePill({super.key, required this.text, required this.width});
+  const GenrePill({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: 24,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: const Color(0x1FFFFFFF),
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: const Color(0x1AFFFFFF), width: 1),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 24, // keep height fixed
+        minWidth: 0, // allow shrink
       ),
-      child: Text(
-        text,
-        style: GoogleFonts.spaceGrotesk(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          height: 24 / 14,
-          color: const Color(0xFFFFFFFF),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0x1FFFFFFF),
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(color: const Color(0x1AFFFFFF), width: 1),
+        ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.spaceGrotesk(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            height: 1,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -226,6 +318,29 @@ class SidePoster extends StatelessWidget {
         child: Image.asset(
           imagePath,
           fit: BoxFit.fill, // better than contain
+        ),
+      ),
+    );
+  }
+}
+
+class TrendingMovieLoadingCard extends StatelessWidget {
+  const TrendingMovieLoadingCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 169,
+      height: 95,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: const Color(0xFF94061C), width: 0.5),
+      ),
+      child: const Center(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
         ),
       ),
     );

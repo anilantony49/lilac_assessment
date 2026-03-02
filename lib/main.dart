@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:lilac_assesment/presentation/details_screen.dart';
-import 'package:lilac_assesment/presentation/home/home_screen.dart';
-import 'package:lilac_assesment/presentation/movie_booking_screen.dart';
-import 'package:lilac_assesment/presentation/onboarding/onboarding_screen.dart';
 import 'package:lilac_assesment/presentation/splash/splash_screen.dart';
 
 Future<void> main() async {
@@ -21,10 +16,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const HomeScreen(),
+      theme: ThemeData(),
+      home: const SplashScreen(),
     );
   }
 }

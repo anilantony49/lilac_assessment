@@ -1,105 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lilac_assesment/presentation/onboarding/onboarding_screen.dart';
+import 'package:lilac_assesment/presentation/widgets/round_button_widget.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    _scaleAnimation = Tween<double>(
+      begin: 1.1,
+      end: 1.14,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SizedBox(
-          width: 402,
-          height: 900,
-          child: Stack(
-            children: [
-              /// Background Image
-              Transform.scale(
-                scale: 1.14, // 🔥 increase for more zoom (1.1 – 1.3 ideal)
-                alignment: Alignment(-0.1, 0.6),
-                child: Image.asset(
-                  "assets/images/splash_image.jpg", // your image path
-                  fit: BoxFit.cover,
-                ),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Stack(
+          children: [
+            /// Background Image with Zoom Animation
+            Positioned.fill(
+              child: AnimatedBuilder(
+                animation: _scaleAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _scaleAnimation.value,
+                    alignment: const Alignment(-0.1, 0.6),
+                    child: Image.asset(
+                      "assets/images/splash_image.jpg",
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
               ),
+            ),
 
-              /// Bottom Frame (Exact Figma Position)
-              Positioned(
-                top: 281,
-                left: 1,
-                child: Container(
-                  width: 401,
-                  height: 619,
-                  decoration: BoxDecoration(
-                    color: Colors.white, // change to your Figma color
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      stops: [0.0, 0.4327, 1.0],
-                      colors: [
-                        Color(0xFF9C9F8E), // #9C9F8E
-                        Color(0xE89C9F8E), // rgba(156,159,142,0.908654)
-                        Color(0x009C9F8E), // transparent
-                      ],
-                    ),
+            /// Bottom Gradient Frame
+            Positioned(
+              top: 281,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 633,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    stops: [0.0, 0.4327, 1.0],
+                    colors: [
+                      Color(0xFF9C9F8E),
+                      Color(0xE89C9F8E),
+                      Color(0x009C9F8E),
+                    ],
                   ),
                 ),
               ),
+            ),
 
-              /// Heading Text (Exact Figma Position)
-              Positioned(
-                top: 281 + 334, // frame top (281) + text top inside frame (334)
-                left: 24,
-                child: SizedBox(
-                  width: 349,
-                  height: 136,
-                  child: Text(
-                    "Catch Every\nBlockbuster Without\nthe Queue",
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 33.86,
-                      fontWeight: FontWeight.w700,
-                      height: 45.14 / 33.86, // exact line-height ratio
-                      letterSpacing: 0,
-                      color: const Color(0xFF2F302E),
-                    ),
+            /// Animated Text (Slide Up)
+            Positioned(
+              top: 615,
+              left: 24,
+              right: 24,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Text(
+                  "Catch Every\nBlockbuster Without\nthe Queue",
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 33.86,
+                    fontWeight: FontWeight.w700,
+                    height: 1.33,
+                    color: const Color(0xFF2F302E),
                   ),
                 ),
               ),
+            ),
 
-              /// Bottom Button (Exact Figma Specs)
-              Positioned(
-                bottom: 50, // derived from Figma top value
-                left: 15,
-                child: Container(
-                  width: 370,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0x33FFFFFF), // #FFFFFF33
-                    borderRadius: BorderRadius.circular(80),
-                    border: Border.all(
-                      color: const Color(0x66FFFFFF), // #FFFFFF66
-                      width: 1,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "NEXT",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            /// NEXT Button
+            PrimaryRoundedButton(
+              title: "NEXT",
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

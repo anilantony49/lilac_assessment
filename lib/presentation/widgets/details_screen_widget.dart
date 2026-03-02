@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lilac_assesment/data/models/movie_details_models.dart';
 
 class TimeSlotWidget extends StatelessWidget {
   final String time;
@@ -117,5 +118,133 @@ class DateDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(width: 1, height: 28, color: const Color(0x1CFFFFFF));
+  }
+}
+
+class GenreChip extends StatelessWidget {
+  final Future<MovieDetailsModels> future;
+  final String iconPath;
+  final bool isFirst; // true = first genre, false = last genre
+
+  const GenreChip({
+    super.key,
+    required this.future,
+    required this.iconPath,
+    required this.isFirst,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 110, maxHeight: 28),
+      child: Container(
+        height: 28,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: const Color(0x1FFFFFFF),
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(color: const Color(0x1AFFFFFF), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(iconPath, height: 14),
+            const SizedBox(width: 6),
+            FutureBuilder<MovieDetailsModels>(
+              future: future,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  );
+                }
+
+                if (!snapshot.hasData || snapshot.hasError) {
+                  return const SizedBox();
+                }
+
+                final genres = snapshot.data!.genre.split(',');
+
+                final text = isFirst ? genres.first.trim() : genres.last.trim();
+
+                return Text(
+                  text,
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    height: .5,
+                    color: Colors.white,
+                    letterSpacing: 0,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InfoChip extends StatelessWidget {
+  final Future<MovieDetailsModels> future;
+  final String Function(MovieDetailsModels) valueExtractor;
+
+  const InfoChip({
+    super.key,
+    required this.future,
+    required this.valueExtractor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 150),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: const Color(0x1AFFFFFF), width: 0.5),
+        ),
+        child: FutureBuilder<MovieDetailsModels>(
+          future: future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                width: 14,
+                height: 14,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.hasError) {
+              return const SizedBox();
+            }
+
+            final value = valueExtractor(snapshot.data!);
+
+            return Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                height: .6,
+                letterSpacing: 0,
+                color: const Color(0xB2FFFFFF),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }

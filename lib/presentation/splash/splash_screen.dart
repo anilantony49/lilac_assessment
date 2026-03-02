@@ -14,14 +14,12 @@ class SplashScreen extends StatelessWidget {
           child: Stack(
             children: [
               /// Background Image
-              Positioned.fill(
-                child: Transform.scale(
-                  scale: 1.14, // 🔥 increase for more zoom (1.1 – 1.3 ideal)
-                  alignment: Alignment(-0.1, 0.6),
-                  child: Image.asset(
-                    "assets/images/splash_image.jpg", // your image path
-                    fit: BoxFit.cover,
-                  ),
+              Transform.scale(
+                scale: 1.14, // 🔥 increase for more zoom (1.1 – 1.3 ideal)
+                alignment: Alignment(-0.1, 0.6),
+                child: Image.asset(
+                  "assets/images/splash_image.jpg", // your image path
+                  fit: BoxFit.cover,
                 ),
               ),
 

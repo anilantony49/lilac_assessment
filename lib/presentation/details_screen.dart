@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lilac_assesment/core/network/api_service.dart';
 import 'package:lilac_assesment/data/models/movie_details_models.dart';
+import 'package:lilac_assesment/presentation/movie_booking_screen.dart';
 import 'package:lilac_assesment/presentation/widgets/details_screen_widget.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -1219,21 +1220,35 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       Positioned(
                         top: 160,
                         left: 16,
-                        child: Container(
-                          width: 370,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF60000),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
                             borderRadius: BorderRadius.circular(80),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Book Now",
-                              style: GoogleFonts.spaceGrotesk(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                height: 24 / 14,
-                                color: Colors.white,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const MovieBookingScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 370,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF60000),
+                                borderRadius: BorderRadius.circular(80),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Book Now",
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    height: 24 / 14,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ),

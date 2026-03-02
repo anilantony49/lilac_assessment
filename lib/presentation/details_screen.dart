@@ -18,7 +18,27 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   final ApiService _apiService = ApiService();
   late Future<MovieDetailsModels> _movieDetails;
+  int selectedIndex = 0;
 
+  final List<Map<String, String>> dates = [
+    {"day": "12", "week": "Fri"},
+    {"day": "13", "week": "Sat"},
+    {"day": "14", "week": "Sun"},
+    {"day": "15", "week": "Mon"},
+    {"day": "16", "week": "Thu"},
+    {"day": "17", "week": "Thu"},
+    {"day": "18", "week": "Fri"},
+  ];
+
+  int selectedTimeIndex = -1;
+
+  final List<String> timeSlots = [
+    "09:40 AM",
+    "11:20 AM",
+    "02:30 PM",
+    "05:45 PM",
+  ];
+  String? movieTitle;
   @override
   void initState() {
     super.initState();
@@ -30,8 +50,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return Scaffold(
       body: Center(
         child: Container(
-          width: 402,
-          height: 875,
+          width: double.infinity,
+          // height: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter, // 180deg
@@ -43,7 +63,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             children: [
               SizedBox(
                 height: 243,
-                width: 696,
+                width: double.infinity,
                 child: FutureBuilder<MovieDetailsModels>(
                   future: _movieDetails,
                   builder: (context, snapshot) {
@@ -98,45 +118,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               width: 1,
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 9,
-                                left: 25,
-                                child: SizedBox(
-                                  width: 87,
-                                  height: 10,
-
-                                  // color: Colors.white, // #FFFFFF
-                                  child: Center(
-                                    child: Text(
-                                      "Watch Trailer",
-                                      style: GoogleFonts.spaceGrotesk(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        height: .5,
-                                        color: Colors.white,
-                                        letterSpacing: 0,
-                                      ),
+                          child: Center(
+                            child: Row(
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const Icon(
+                                  Icons.play_arrow,
+                                  size: 12, // close to 8x9 visual size
+                                  color: Colors.white,
+                                ),
+                                Center(
+                                  child: Text(
+                                    "Watch Trailer",
+                                    style: GoogleFonts.spaceGrotesk(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      height: .5,
+                                      color: Colors.white,
+                                      letterSpacing: 0,
                                     ),
                                   ),
                                 ),
-                              ),
-                              // Add spacing between the text and the play icon
-                              Positioned(
-                                top: 9,
-                                left: 12,
-                                child: SizedBox(
-                                  width: 8,
-                                  height: 9,
-                                  child: const Icon(
-                                    Icons.play_arrow,
-                                    size: 12, // close to 8x9 visual size
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -145,12 +150,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ],
               ),
 
-              Stack(
-                children: [
-                  Positioned(
-                    top: 259,
-                    left: 16,
-                    child: ConstrainedBox(
+              Positioned(
+                top: 259,
+                left: 16,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ConstrainedBox(
                       constraints: const BoxConstraints(
                         maxWidth: 90,
                         maxHeight: 24,
@@ -166,35 +172,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             width: 1,
                           ),
                         ),
-                        child: Stack(
-                          children: [
-                            // Positioned(
-                            //   top: 7,
-                            //   left: 8,
-                            //   child: SizedBox(
-                            //     width: 63,
-                            //     height: 10,
-
-                            //     // color: Colors.white,
-                            //   ),
-                            // ),
-                            Positioned(
-                              top: 7,
-                              left: 8,
-                              child: SizedBox(
-                                width: 14,
-                                height: 10,
-                                // color: Colors.white,
-                                child: Image.asset(
-                                  'assets/images/boom.png',
-                                  fit: BoxFit.cover,
-                                ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                'assets/images/boom.png',
+                                fit: BoxFit.cover,
                               ),
-                            ),
-                            Positioned(
-                              top: 7,
-                              left: 26,
-                              child: FutureBuilder<MovieDetailsModels>(
+                              FutureBuilder<MovieDetailsModels>(
                                 future: _movieDetails,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
@@ -222,28 +208,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                             .first
                                             .trim();
 
-                                    return ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        maxWidth: 65,
-                                        maxHeight: 10,
-                                      ),
-                                      child: SizedBox(
-                                        // width: 45,
-                                        height: 10,
-                                        // color: Colors.white,
-                                        child: Center(
-                                          child: Text(
-                                            genre, // Capitalize manually
-                                            style: GoogleFonts.spaceGrotesk(
-                                              fontSize: 14,
-                                              fontWeight:
-                                                  FontWeight.w400, // Regular
-                                              height:
-                                                  .5, // line-height conversion
-                                              letterSpacing: 0,
-                                              color: Colors.white, // #FFFFFF
-                                            ),
-                                          ),
+                                    return Center(
+                                      child: Text(
+                                        genre, // Capitalize manually
+                                        style: GoogleFonts.spaceGrotesk(
+                                          fontSize: 14,
+                                          fontWeight:
+                                              FontWeight.w400, // Regular
+                                          height: .5, // line-height conversion
+                                          letterSpacing: 0,
+                                          color: Colors.white, // #FFFFFF
                                         ),
                                       ),
                                     );
@@ -252,86 +226,57 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   }
                                 },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
 
-              Stack(
-                children: [
-                  Positioned(
-                    top: 259,
-                    left: 107,
-                    child: Container(
-                      width: 69,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: const Color(0x1FFFFFFF), // #FFFFFF1F
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: const Color(0x1AFFFFFF), // #FFFFFF1A
-                          width: 1,
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 7,
-                            left: 8,
-                            child: SizedBox(
-                              width: 63,
-                              height: 10,
-
-                              // color: Colors.white,
-                            ),
+                    SizedBox(width: 10),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 90, maxHeight: 24),
+                      child: Container(
+                        // width: 69,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: const Color(0x1FFFFFFF), // #FFFFFF1F
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(
+                            color: const Color(0x1AFFFFFF), // #FFFFFF1A
+                            width: 1,
                           ),
-                          Positioned(
-                            top: 7,
-                            left: 8,
-                            child: SizedBox(
-                              width: 14,
-                              height: 10,
-                              // color: Colors.white,
-                              child: Image.asset(
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
                                 'assets/images/star.png',
                                 fit: BoxFit.cover,
                               ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 7,
-                            left: 26,
-                            child: FutureBuilder<MovieDetailsModels>(
-                              future: _movieDetails,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                    child: const CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: const Text(
-                                      'No data',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Text('Failed to load');
-                                } else if (snapshot.hasData) {
-                                  return SizedBox(
-                                    width: 45,
-                                    height: 10,
-                                    // color: Colors.white,
-                                    child: Text(
+                              FutureBuilder<MovieDetailsModels>(
+                                future: _movieDetails,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: const Text(
+                                        'No data',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Text('Failed to load');
+                                  } else if (snapshot.hasData) {
+                                    return Text(
                                       snapshot.data!.genre
                                           .split(",")
                                           .last, // Capitalize manually
@@ -342,19 +287,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         letterSpacing: 0,
                                         color: Colors.white, // #FFFFFF
                                       ),
-                                    ),
-                                  );
-                                } else {
-                                  return const Text('No data available');
-                                }
-                              },
-                            ),
+                                    );
+                                  } else {
+                                    return const Text('No data available');
+                                  }
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               Positioned(
@@ -386,17 +331,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     if (!snapshot.hasData) {
                       return const SizedBox();
                     }
-
-                    return Text(
-                      snapshot.data!.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        height: 24 / 24, // 1.0
-                        letterSpacing: 0,
-                        color: const Color(0xFFD9D9D9),
+                    movieTitle = snapshot.data!.title;
+                    return SizedBox(
+                      width: 400,
+                      child: Text(
+                        movieTitle!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          height: 24 / 24, // 1.0
+                          letterSpacing: 0,
+                          color: const Color(0xFFD9D9D9),
+                        ),
                       ),
                     );
                   },
@@ -406,43 +354,47 @@ class _DetailsScreenState extends State<DetailsScreen> {
               Positioned(
                 top: 348,
                 left: 16,
-                child: Container(
-                  width: 58,
-                  height: 22,
-                  // padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: const Color(0x1AFFFFFF),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: 42,
-                    height: 10,
-                    child: Center(
-                      child: FutureBuilder<MovieDetailsModels>(
-                        future: _movieDetails,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            );
-                          }
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: const Text(
-                                'No data',
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 250),
+                      child: Container(
+                        // width: 58,
+                        // height: 22,
+                        padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: const Color(0x1AFFFFFF),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: FutureBuilder<MovieDetailsModels>(
+                          future: _movieDetails,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return const Text(
+                                "Error",
                                 style: TextStyle(color: Colors.white),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Text('Failed to load');
-                          } else if (snapshot.hasData) {
+                              );
+                            }
+
+                            if (!snapshot.hasData) {
+                              return const SizedBox();
+                            }
+
                             return Text(
                               snapshot.data!.rated,
                               style: GoogleFonts.spaceGrotesk(
@@ -453,57 +405,51 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 color: const Color(0xB2FFFFFF),
                               ),
                             );
-                          } else {
-                            return const Text('No data available');
-                          }
-                        },
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
+                    SizedBox(width: 10),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 250),
+                      child: Container(
+                        // width: 58,
+                        // height: 22,
+                        padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: const Color(0x1AFFFFFF),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: FutureBuilder<MovieDetailsModels>(
+                          future: _movieDetails,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return const Text(
+                                "Error",
+                                style: TextStyle(color: Colors.white),
+                              );
+                            }
 
-              Positioned(
-                top: 348,
-                left: 82,
-                child: Container(
-                  width: 65,
-                  height: 22,
-                  // padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: const Color(0x1AFFFFFF), // #FFFFFF1A
-                      width: 0.5,
-                    ),
-                  ),
-                  child: FutureBuilder<MovieDetailsModels>(
-                    future: _movieDetails,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        );
-                      }
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: const Text(
-                            'No data',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Failed to load');
-                      } else if (snapshot.hasData) {
-                        return SizedBox(
-                          width: 49,
-                          height: 10,
-                          child: Center(
-                            child: Text(
-                              snapshot.data!.language.split(",").first,
+                            if (!snapshot.hasData) {
+                              return const SizedBox();
+                            }
+
+                            return Text(
+                              snapshot.data!.language,
                               style: GoogleFonts.spaceGrotesk(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -511,57 +457,51 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 letterSpacing: 0,
                                 color: const Color(0xB2FFFFFF),
                               ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return const Text('No data available');
-                      }
-                    },
-                  ),
-                ),
-              ),
-
-              Positioned(
-                top: 348,
-                left: 155,
-                child: Container(
-                  width: 88,
-                  height: 22,
-                  // padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: const Color(0x1AFFFFFF), // #FFFFFF1A
-                      width: 0.5,
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                  child: FutureBuilder<MovieDetailsModels>(
-                    future: _movieDetails,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
+                    SizedBox(width: 10),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 250),
+                      child: Container(
+                        // width: 58,
+                        // height: 22,
+                        padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: const Color(0x1AFFFFFF),
+                            width: 0.5,
                           ),
-                        );
-                      }
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: const Text(
-                            'No data',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Failed to load');
-                      } else if (snapshot.hasData) {
-                        return SizedBox(
-                          width: 49,
-                          height: 10,
-                          child: Center(
-                            child: Text(
+                        ),
+                        child: FutureBuilder<MovieDetailsModels>(
+                          future: _movieDetails,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return const Text(
+                                "Error",
+                                style: TextStyle(color: Colors.white),
+                              );
+                            }
+
+                            if (!snapshot.hasData) {
+                              return const SizedBox();
+                            }
+
+                            return Text(
                               snapshot.data!.runtime,
                               style: GoogleFonts.spaceGrotesk(
                                 fontSize: 14,
@@ -570,16 +510,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 letterSpacing: 0,
                                 color: const Color(0xB2FFFFFF),
                               ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return const Text('No data available');
-                      }
-                    },
-                  ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               Positioned(
                 top: 394,
                 left: 16,
@@ -598,10 +537,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         );
                       }
 
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: const Text(
-                            'No data',
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: Text(
+                            "Failed to load",
                             style: TextStyle(color: Colors.white),
                           ),
                         );
@@ -618,7 +557,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         style: GoogleFonts.spaceGrotesk(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          height: 24 / 16, // correct conversion
+                          height: 24 / 16, // ✅ correct
                           letterSpacing: 0,
                           color: const Color(0xB2FFFFFF),
                         ),
@@ -671,55 +610,56 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ],
               ),
 
-              // Positioned(
-              //   top: 546,
-              //   left: 79,
-              //   child: SizedBox(width: 125, height: 34),
-              // ),
               Positioned(
                 top: 546,
                 left: 79,
-                child: FutureBuilder<MovieDetailsModels>(
-                  future: _movieDetails,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: const CircularProgressIndicator(
-                          strokeWidth: 2,
+                child: SizedBox(
+                  height: 20,
+                  width: 140,
+                  child: FutureBuilder<MovieDetailsModels>(
+                    future: _movieDetails,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox(
+                          height: 2,
+                          width: 2,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (snapshot.hasError) {
+                        return const Text(
+                          "Failed to load",
+                          style: TextStyle(color: Colors.white),
+                        );
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const SizedBox();
+                      }
+
+                      final firstActor =
+                          snapshot.data!.actors.split(",").first.trim();
+
+                      return Text(
+                        firstActor,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: .6,
+                          letterSpacing: 0,
                           color: Colors.white,
                         ),
                       );
-                    }
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: const Text(
-                          'No data',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Failed to load');
-                    } else if (snapshot.hasData) {
-                      return SizedBox(
-                        width: 125,
-                        height: 10,
-                        child: Text(
-                          snapshot.data!.actors
-                              .split(",")
-                              .first, // Capitalize manually
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            height: .6, // correct line height
-                            color: Colors.white,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return const Text('No data available');
-                    }
-                  },
+                    },
+                  ),
                 ),
               ),
               Positioned(
@@ -746,46 +686,52 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 top: 546,
                 left: 236,
                 child: SizedBox(
-                  width: 131,
-                  height: 10,
+                  height: 20,
+                  width: 140,
                   child: FutureBuilder<MovieDetailsModels>(
                     future: _movieDetails,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
+                        return const SizedBox(
+                          height: 2,
+                          width: 2,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           ),
                         );
                       }
+
+                      if (snapshot.hasError) {
+                        return const Text(
+                          "Failed to load",
+                          style: TextStyle(color: Colors.white),
+                        );
+                      }
+
                       if (!snapshot.hasData) {
-                        return Center(
-                          child: const Text(
-                            'No data',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Failed to load');
-                      } else if (snapshot.hasData) {
-                        return Text(
-                          snapshot.data!.actors
-                              .split(",")
-                              .elementAt(1), // Get second actor
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            height: .6,
-                            color: Colors.white,
-                            letterSpacing: 0,
-                          ),
-                        );
-                      } else {
-                        return const Text('No data available');
+                        return const SizedBox();
                       }
+
+                      final secondActor =
+                          snapshot.data!.actors.split(",").length > 1
+                              ? snapshot.data!.actors.split(",")[1].trim()
+                              : "";
+
+                      return Text(
+                        secondActor,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: .6,
+                          letterSpacing: 0,
+                          color: Colors.white,
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -839,381 +785,368 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 281,
+                  height: 290,
                   decoration: BoxDecoration(
                     color: const Color(0xFF1A0004),
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: Stack(
                     children: [
+                      // Positioned(
+                      //   top: 46,
+                      //   left: 30,
+                      //   child: Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 21,
+                      //         height: 25,
+                      //         child: Text(
+                      //           "12",
+                      //           style: GoogleFonts.spaceGrotesk(
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w400,
+                      //             height: .7, // 1.2
+                      //             color: Colors.white,
+                      //             letterSpacing: 0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       // SizedBox(height: 10),
+                      //       Text(
+                      //         textAlign: TextAlign.center,
+                      //         "Fri",
+                      //         style: GoogleFonts.spaceGrotesk(
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: .7,
+                      //           color: const Color(0x80FFFFFF),
+                      //           letterSpacing: 0,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+
+                      // Positioned(
+                      //   top: 50,
+                      //   left: 67,
+                      //   child: Container(
+                      //     width: 1,
+                      //     height: 28,
+                      //     color: const Color(0x1CFFFFFF),
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   top: 46,
+                      //   left: 83,
+                      //   child: Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 21,
+                      //         height: 25,
+                      //         child: Text(
+                      //           "13",
+                      //           style: GoogleFonts.spaceGrotesk(
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w400,
+                      //             height: .7, // 1.2
+                      //             color: Colors.white,
+                      //             letterSpacing: 0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       // SizedBox(height: 10),
+                      //       Text(
+                      //         textAlign: TextAlign.center,
+                      //         "Sat",
+                      //         style: GoogleFonts.spaceGrotesk(
+                      //           fontSize: 14,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: .7,
+                      //           color: const Color(0x80FFFFFF),
+                      //           letterSpacing: -.99,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+
+                      // Positioned(
+                      //   top: 50,
+                      //   left: 120,
+                      //   child: Container(
+                      //     width: 1,
+                      //     height: 28,
+                      //     color: const Color(0x1CFFFFFF),
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   top: 46,
+                      //   left: 136,
+                      //   child: Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 21,
+                      //         height: 25,
+                      //         child: Text(
+                      //           "14",
+                      //           style: GoogleFonts.spaceGrotesk(
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w400,
+                      //             height: .7, // 1.2
+                      //             color: Colors.white,
+                      //             letterSpacing: 0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Text(
+                      //         textAlign: TextAlign.center,
+                      //         "Sun",
+                      //         style: GoogleFonts.spaceGrotesk(
+                      //           fontSize: 13,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: .7,
+                      //           color: const Color(0x80FFFFFF),
+                      //           letterSpacing: -.99,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   top: 50,
+                      //   left: 279,
+                      //   child: Container(
+                      //     width: 1,
+                      //     height: 28,
+                      //     color: const Color(0x1CFFFFFF),
+                      //   ),
+                      // ),
+
+                      // Positioned(
+                      //   top: 46,
+                      //   left: 242,
+                      //   child: Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 21,
+                      //         height: 25,
+                      //         child: Text(
+                      //           "16",
+                      //           style: GoogleFonts.spaceGrotesk(
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w400,
+                      //             height: .7, // 1.2
+                      //             color: Colors.white,
+                      //             letterSpacing: 0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Text(
+                      //         textAlign: TextAlign.center,
+                      //         "Thu",
+                      //         style: GoogleFonts.spaceGrotesk(
+                      //           fontSize: 13,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: .7,
+                      //           color: const Color(0x80FFFFFF),
+                      //           letterSpacing: -.99,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   top: 50,
+                      //   left: 332,
+                      //   child: Container(
+                      //     width: 1,
+                      //     height: 28,
+                      //     color: const Color(0x1CFFFFFF),
+                      //   ),
+                      // ),
+
+                      // Positioned(
+                      //   top: 46,
+                      //   left: 295,
+                      //   child: Column(
+                      //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 21,
+                      //         height: 25,
+                      //         child: Text(
+                      //           "17",
+                      //           style: GoogleFonts.spaceGrotesk(
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w400,
+                      //             height: .7, // 1.2
+                      //             color: Colors.white,
+                      //             letterSpacing: 0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Text(
+                      //         textAlign: TextAlign.center,
+                      //         "The",
+                      //         style: GoogleFonts.spaceGrotesk(
+                      //           fontSize: 13,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: .7,
+                      //           color: const Color(0x80FFFFFF),
+                      //           letterSpacing: -.99,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   top: 50,
+                      //   left: 385,
+                      //   child: Container(
+                      //     width: 1,
+                      //     height: 28,
+                      //     color: const Color(0x1CFFFFFF),
+                      //   ),
+                      // ),
+
+                      // Positioned(
+                      //   top: 46,
+                      //   left: 348,
+                      //   child: Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         width: 21,
+                      //         height: 25,
+                      //         child: Text(
+                      //           "18",
+                      //           style: GoogleFonts.spaceGrotesk(
+                      //             fontSize: 20,
+                      //             fontWeight: FontWeight.w400,
+                      //             height: .7, // 1.2
+                      //             color: Colors.white,
+                      //             letterSpacing: 0,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Text(
+                      //         textAlign: TextAlign.center,
+                      //         "Fri",
+                      //         style: GoogleFonts.spaceGrotesk(
+                      //           fontSize: 13,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: .7,
+                      //           color: const Color(0x80FFFFFF),
+                      //           letterSpacing: -.99,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      Positioned(
+                        top: 8,
+                        left: 185,
+                        child: Container(
+                          width: 39,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: const Color(0x80FFFFFF), // #FFFFFF80
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
                       Positioned(
                         top: 46,
                         left: 30,
-                        child: SizedBox(
-                          width: 21,
-                          height: 37,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 21,
-                                height: 25,
-                                child: Text(
-                                  "12",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7, // 1.2
-                                    color: Colors.white,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              // SizedBox(height: 10),
-                              SizedBox(
-                                width: 17,
+                        right: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: List.generate(dates.length * 2 - 1, (
+                            index,
+                          ) {
+                            if (index.isEven) {
+                              final item = dates[index ~/ 2];
 
-                                height: 10,
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Fri",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7,
-                                    color: const Color(0x80FFFFFF),
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                              return DateItem(
+                                day: item["day"]!,
+                                weekDay: item["week"]!,
+                                isSelected: selectedIndex == index ~/ 2,
+                                onTap: () {
+                                  setState(() {
+                                    selectedIndex = index ~/ 2;
+                                  });
+                                },
+                              );
+                            } else {
+                              return const DateDivider();
+                            }
+                          }),
                         ),
                       ),
 
-                      Positioned(
-                        top: 50,
-                        left: 67,
-                        child: Container(
-                          width: 1,
-                          height: 28,
-                          color: const Color(0x1CFFFFFF),
-                        ),
-                      ),
-                      Positioned(
-                        top: 46,
-                        left: 83,
-                        child: SizedBox(
-                          width: 21,
-                          height: 37,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 21,
-                                height: 25,
-                                child: Text(
-                                  "13",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7, // 1.2
-                                    color: Colors.white,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              // SizedBox(height: 10),
-                              SizedBox(
-                                width: 23,
-                                height: 10,
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Sat",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7,
-                                    color: const Color(0x80FFFFFF),
-                                    letterSpacing: -.99,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 50,
-                        left: 120,
-                        child: Container(
-                          width: 1,
-                          height: 28,
-                          color: const Color(0x1CFFFFFF),
-                        ),
-                      ),
-                      Positioned(
-                        top: 46,
-                        left: 136,
-                        child: SizedBox(
-                          width: 21,
-                          height: 37,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 21,
-                                height: 25,
-                                child: Text(
-                                  "14",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7, // 1.2
-                                    color: Colors.white,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 26,
-                                height: 10,
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Sun",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7,
-                                    color: const Color(0x80FFFFFF),
-                                    letterSpacing: -.99,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        left: 279,
-                        child: Container(
-                          width: 1,
-                          height: 28,
-                          color: const Color(0x1CFFFFFF),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 46,
-                        left: 242,
-                        child: SizedBox(
-                          width: 21,
-                          height: 37,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 21,
-                                height: 25,
-                                child: Text(
-                                  "16",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7, // 1.2
-                                    color: Colors.white,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 26,
-                                height: 10,
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Thu",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7,
-                                    color: const Color(0x80FFFFFF),
-                                    letterSpacing: -.99,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        left: 332,
-                        child: Container(
-                          width: 1,
-                          height: 28,
-                          color: const Color(0x1CFFFFFF),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 46,
-                        left: 295,
-                        child: SizedBox(
-                          width: 21,
-                          height: 37,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 21,
-                                height: 25,
-                                child: Text(
-                                  "17",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7, // 1.2
-                                    color: Colors.white,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 26,
-                                height: 10,
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "The",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7,
-                                    color: const Color(0x80FFFFFF),
-                                    letterSpacing: -.99,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        left: 385,
-                        child: Container(
-                          width: 1,
-                          height: 28,
-                          color: const Color(0x1CFFFFFF),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 46,
-                        left: 348,
-                        child: SizedBox(
-                          width: 21,
-                          height: 37,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 21,
-                                height: 25,
-                                child: Text(
-                                  "18",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7, // 1.2
-                                    color: Colors.white,
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 26,
-                                height: 10,
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Fri",
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    height: .7,
-                                    color: const Color(0x80FFFFFF),
-                                    letterSpacing: -.99,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        top: 39,
-                        left: 173,
-                        child: Container(
-                          width: 54,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(13),
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 7,
-                                left: 12,
-                                child: SizedBox(
-                                  width: 30,
-                                  height: 37,
-                                  // color: const Color(0xFF1A0004),
-                                ),
-                              ),
-                              Positioned(
-                                top: 7,
-                                left: 16,
-                                child: Text(
-                                  "15",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500, // Medium
-                                    height: 24 / 20,
-                                    color: const Color(0xFF1A0004),
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 34,
-                                left: 12,
-                                child: Text(
-                                  "Mon",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1,
-                                    color: const Color(0xFF1A0004),
-                                    letterSpacing: 0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
+                      // Positioned(
+                      //   top: 39,
+                      //   left: 173,
+                      //   child: Container(
+                      //     width: 54,
+                      //     height: 52,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.white,
+                      //       borderRadius: BorderRadius.circular(13),
+                      //     ),
+                      //     child: Stack(
+                      //       children: [
+                      //         Positioned(
+                      //           top: 7,
+                      //           left: 16,
+                      //           child: Text(
+                      //             "15",
+                      //             textAlign: TextAlign.center,
+                      //             style: GoogleFonts.spaceGrotesk(
+                      //               fontSize: 20,
+                      //               fontWeight: FontWeight.w500, // Medium
+                      //               height: 24 / 20,
+                      //               color: const Color(0xFF1A0004),
+                      //               letterSpacing: 0,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         Positioned(
+                      //           top: 34,
+                      //           left: 12,
+                      //           child: Text(
+                      //             "Mon",
+                      //             textAlign: TextAlign.center,
+                      //             style: GoogleFonts.spaceGrotesk(
+                      //               fontSize: 14,
+                      //               fontWeight: FontWeight.w500,
+                      //               height: 1,
+                      //               color: const Color(0xFF1A0004),
+                      //               letterSpacing: 0,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       Positioned(
                         top: 115,
                         left: 24,
                         right: 24,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            TimeSlotWidget(time: "09:40 AM"),
-                            TimeSlotWidget(time: "11:20 AM"),
-                            TimeSlotWidget(time: "02:30 PM"),
-                            TimeSlotWidget(time: "05:45 PM"),
-                          ],
+                          children: List.generate(timeSlots.length, (index) {
+                            return TimeSlotWidget(
+                              time: timeSlots[index],
+                              isSelected: selectedTimeIndex == index,
+                              onTap: () {
+                                setState(() {
+                                  selectedTimeIndex = index;
+                                });
+                              },
+                            );
+                          }),
                         ),
                       ),
 
@@ -1225,10 +1158,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(80),
                             onTap: () {
+                              if (selectedIndex == -1 ||
+                                  selectedTimeIndex == -1) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Please select date and time",
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final selectedDate = dates[selectedIndex];
+                              final selectedTime = timeSlots[selectedTimeIndex];
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const MovieBookingScreen(),
+                                  builder:
+                                      (_) => MovieBookingScreen(
+                                        date: selectedDate["day"]!,
+                                        time: selectedTime,
+                                        title: movieTitle!,
+                                      ),
                                 ),
                               );
                             },

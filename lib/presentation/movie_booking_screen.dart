@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MovieBookingScreen extends StatelessWidget {
-  const MovieBookingScreen({super.key});
+  final String date;
+  final String title;
+
+  final String time;
+  const MovieBookingScreen({
+    super.key,
+    required this.date,
+    required this.time,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +68,9 @@ class MovieBookingScreen extends StatelessWidget {
             top: 260,
             left: 141,
             child: SizedBox(
-              width: 120,
+              width: 140,
               child: Text(
-                "For Avengers",
+                "For $title",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.dmSans(
                   fontSize: 20,
@@ -130,7 +139,7 @@ class MovieBookingScreen extends StatelessWidget {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: const [
+                                      children: [
                                         Text.rich(
                                           TextSpan(
                                             children: [
@@ -142,7 +151,7 @@ class MovieBookingScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: "April 23",
+                                                text: "April $date",
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                 ),
@@ -161,7 +170,7 @@ class MovieBookingScreen extends StatelessWidget {
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: "6 PM",
+                                                text: time,
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                 ),
